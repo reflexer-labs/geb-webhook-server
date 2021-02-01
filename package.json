@@ -1,0 +1,21 @@
+{
+  "name": "geb-webhook-server",
+  "version": "1.0.0",
+  "description": "Server to sending customizable notifications for the geb system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "author": "Guillaume Felley",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^14.14.22",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0"
+  }
+}
