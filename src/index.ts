@@ -2,11 +2,12 @@ import { Job } from "./job-base";
 import { ModifySafeJob } from "./jobs/modify-safe";
 import { Subgraph } from "./subgraph";
 import * as fs from "fs";
-import { SignKeyObjectInput } from "crypto";
+import { NewSafeJob } from "./jobs/new-safe";
+import { CeilingChecker } from "./jobs/debt-ceiling-alert";
 
 // Load .env
 require("dotenv").config();
-const POLL_INTERVAL: number = Number(process.env.POLL_INTERVAL) || 2000;
+const POLL_INTERVAL: number = Number(process.env.POLL_INTERVAL) || 5000;
 const CACHE_FILE_NAME = "cache/save.tmp";
 
 class WebHookServer {
@@ -23,7 +24,9 @@ class WebHookServer {
   }
 
   private registerJobs() {
-    this.jobs.push(new ModifySafeJob(this.subgraph, "XXXX"));
+    this.jobs.push(new CeilingChecker(this.subgraph));
+    this.jobs.push(new NewSafeJob(this.subgraph));
+    this.jobs.push(new ModifySafeJob(this.subgraph));
   }
 
   private async poll() {
@@ -33,13 +36,10 @@ class WebHookServer {
 
   private async exec() {
     console.log("Running ..");
-    // const lastCheckedBlock = 23099219;
-    // const currentSafeBlock = 23099319;
 
     // Allow for 4 confirmation block in the subgraph
-    // A case of deeper reorgs the subgraph data will get overwritten and
+    // In case of a deeper reorgs the subgraph data will get overwritten and
     // we might have sent a wrong notification.
-
     let currentSafeBlock: number;
 
     try {
@@ -49,7 +49,11 @@ class WebHookServer {
       return;
     }
 
-    const lastCheckedBlock = await this.getLatestCheckBlock();
+    let lastCheckedBlock = await this.getLatestCheckBlock();
+
+    // Test block numbers
+    // lastCheckedBlock = 23276042;
+    // currentSafeBlock = 23437459;
 
     if (!lastCheckedBlock) {
       // First time running the app, start from the current block
