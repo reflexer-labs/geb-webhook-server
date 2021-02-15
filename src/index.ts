@@ -52,8 +52,8 @@ class WebHookServer {
     let lastCheckedBlock = await this.getLatestCheckBlock();
 
     // Test block numbers
-    // lastCheckedBlock = 23276042;
-    // currentSafeBlock = 23437459;
+    // lastCheckedBlock = 11849210;
+    // currentSafeBlock = 11861983;
 
     if (!lastCheckedBlock) {
       // First time running the app, start from the current block
