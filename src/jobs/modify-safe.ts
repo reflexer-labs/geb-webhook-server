@@ -110,11 +110,9 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
       message += `  [[link](<${this.getEtherscanLink(
         change.createdAtTransaction
       )}>)]`;
-      
+
       // Post in Discord
-      console.log(message);
-      // await this.discordGebActivityChannel(message);
-      // await this.discordDevChannel(message);
+      await this.discordGebActivityChannel(message);
     }
   }
 }
