@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Deploy WebHook Server
+
+jobs:
+  deploy:
+    name: Deploy WebHook Server
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '#no-ci')"
+
+    steps:
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{secrets.DEPLOY_URL}}
+        username: ubuntu
+        key: ${{secrets.SSH_PRIVATE_KEY}}
+        port: 22
+        script: |
+          cd geb-webhook-server
+          git fetch
+          git checkout origin/master
+          docker-compose up --build -d
