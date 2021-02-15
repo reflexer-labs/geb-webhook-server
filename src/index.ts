@@ -27,6 +27,7 @@ class WebHookServer {
     this.jobs.push(new CeilingChecker(this.subgraph));
     this.jobs.push(new NewSafeJob(this.subgraph));
     this.jobs.push(new ModifySafeJob(this.subgraph));
+    this.jobs.push(new LiquidationAlertJob(this.subgraph));
   }
 
   private async poll() {
