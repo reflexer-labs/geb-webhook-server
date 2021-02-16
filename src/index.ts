@@ -4,6 +4,7 @@ import { Subgraph } from "./subgraph";
 import * as fs from "fs";
 import { NewSafeJob } from "./jobs/new-safe";
 import { CeilingChecker } from "./jobs/debt-ceiling-alert";
+import { LiquidationAlertJob } from "./jobs/liquidation-alert";
 
 // Load .env
 require("dotenv").config();
