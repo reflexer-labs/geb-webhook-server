@@ -5,6 +5,7 @@ import * as fs from "fs";
 import { NewSafeJob } from "./jobs/new-safe";
 import { CeilingChecker } from "./jobs/debt-ceiling-alert";
 import { LiquidationAlertJob } from "./jobs/liquidation-alert";
+import { TraceMonitorJob } from "./jobs/trace-monitor";
 
 // Load .env
 require("dotenv").config();
