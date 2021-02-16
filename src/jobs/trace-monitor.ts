@@ -148,6 +148,7 @@ export class TraceMonitorJob extends Job {
 
     // For each block since we last checked
     for (let i = lastCheckedBlock + 1; i <= currentSafeBlock; i++) {
+      console.log(i);
       let traces: Trace[] = await traceProvider.send("trace_block", [
         ethers.BigNumber.from(i).toHexString(),
       ]);
@@ -192,7 +193,7 @@ export class TraceMonitorJob extends Job {
             return !Object.values(WHITELIST).includes(parentTrace.action.to);
           } else {
             // If the parent is not a delegate call, it's suspicious
-            return false;
+            return true;
           }
         }
       });
