@@ -11,3 +11,6 @@ export const getGeb = async () => {
   const net = (await provider.getNetwork()).chainId;
   return new Geb(net == 1 ? "mainnet" : "kovan", provider);
 };
+
+export const arrayCompare = (a, b) =>
+  a.length === b.length && a.every((value, index) => value === b[index]);
