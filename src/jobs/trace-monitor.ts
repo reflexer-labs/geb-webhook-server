@@ -191,6 +191,10 @@ export class TraceMonitorJob extends Job {
           if (parentTrace.action.callType === "delegatecall") {
             // If the parent is a delegate call, it's only fine if the delegatecalled contract is whitelisted
             return !Object.values(WHITELIST).includes(parentTrace.action.to);
+          } else if (parentTrace.type === "create") {
+            // If it's a create contract (the trace comes from a constructor) allow if the creator is whitelisted
+            // This useful for the safe manager creating safeHandler contracts that call the safe engine in the constructor
+            return !Object.values(WHITELIST).includes(parentTrace.action.from);
           } else {
             // If the parent is not a delegate call, it's suspicious
             return true;
