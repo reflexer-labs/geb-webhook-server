@@ -67,13 +67,13 @@ export class LiquidationAlertJob extends Job {
     }
 
     for (let liquidation of resp.fixedDiscountAuctionBatches) {
-      let message = `Someone just bought ${Number(
-        liquidation.sellAmount
-      ).toFixed(2)} ETH for ${Number(liquidation.buyAmount).toFixed(
+      let message = `Someone just bid ${Number(liquidation.buyAmount).toFixed(
         2
-      )} RAI in auction #${
+      )} RAI for ${Number(liquidation.sellAmount).toFixed(2)} ETH in auction #${
         liquidation.auction.auctionId
-      } 🤝 [[link](<${this.getEtherscanLink(liquidation.createdAtTransaction)}>)]`;
+      } 🤝 [[link](<${this.getEtherscanLink(
+        liquidation.createdAtTransaction
+      )}>)]`;
 
       await this.discordGebActivityChannel(message);
     }
