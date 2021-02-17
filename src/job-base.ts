@@ -1,6 +1,7 @@
 import { Subgraph } from "./subgraph";
 import Axios from "axios";
 import { sleep } from "./utils";
+import Twit from "twit";
 
 export abstract class Job {
   constructor(protected subgraph: Subgraph) {}
