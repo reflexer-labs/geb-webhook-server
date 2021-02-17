@@ -106,7 +106,7 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
         )} ETH 🍃🍃`;
       }
 
-      const isWhale = deltaDebt >= 50000; // 50k RAI
+      const isWhale = deltaDebt >= 200000; // 200k RAI
       if (isWhale) {
         message += "🐳🐳";
 
