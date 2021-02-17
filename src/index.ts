@@ -9,7 +9,7 @@ import { TraceMonitorJob } from "./jobs/trace-monitor";
 
 // Load .env
 require("dotenv").config();
-const POLL_INTERVAL: number = Number(process.env.POLL_INTERVAL) || 5000;
+const POLL_INTERVAL: number = Number(process.env.POLL_INTERVAL) || 30000;
 const CACHE_FILE_NAME = "cache/save.tmp";
 
 class WebHookServer {
