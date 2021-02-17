@@ -1,5 +1,6 @@
 import { Subgraph } from "./subgraph";
 import Axios from "axios";
+import { sleep } from "./utils";
 
 export abstract class Job {
   constructor(protected subgraph: Subgraph) {}
@@ -83,6 +84,8 @@ export abstract class Job {
     let content = {
       content: message,
     };
+
+    await sleep(1000);
 
     console.log(message);
     await Axios.post(hookUrl, content);

@@ -14,3 +14,7 @@ export const getGeb = async () => {
 
 export const arrayCompare = (a, b) =>
   a.length === b.length && a.every((value, index) => value === b[index]);
+
+export const sleep = async (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

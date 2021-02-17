@@ -7,7 +7,7 @@ export class ModifySafeJob extends Job {
     currentSafeBlock: number
   ): Promise<void> {
     const query = `{
-modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
+modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}, orderBy: createdAt, orderDirection: asc, first: 1000) {
         deltaDebt
         deltaCollateral
         safeHandler
