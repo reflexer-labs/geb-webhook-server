@@ -1,5 +1,4 @@
 import { Job } from "../job-base";
-import { utils } from "geb.js";
 
 export class ModifySafeJob extends Job {
   public async run(
@@ -56,7 +55,7 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
         Number(change.deltaDebt) * Number(change.accumulatedRate);
       const deltaCollateral = Number(change.deltaCollateral);
 
-      // Skip if not a whale move
+      // Skip if a dusty move
       if (deltaDebt < 0.1 && deltaCollateral < 0.1) {
         continue;
       }
@@ -105,6 +104,16 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
         message = `Safe #${safeId} just withdrew ${deltaCollateral.toFixed(
           2
         )} ETH 🍃🍃`;
+      }
+
+      const isWhale = deltaDebt >= 50000; // 50k RAI
+      if (isWhale) {
+        message += "🐳🐳";
+
+        // Post to twitter
+        const tweet =
+          message + ` ${this.getEtherscanLink(change.createdAtTransaction)}`;
+        this.postTweet(tweet);
       }
 
       message += `  [[link](<${this.getEtherscanLink(
