@@ -113,7 +113,7 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
         // Post to twitter
         const tweet =
           message + ` ${this.getEtherscanLink(change.createdAtTransaction)}`;
-        this.postTweet(tweet);
+        await this.postTweet(tweet);
       }
 
       message += `  [[link](<${this.getEtherscanLink(
