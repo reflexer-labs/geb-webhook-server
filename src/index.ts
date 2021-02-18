@@ -15,6 +15,7 @@ const CACHE_FILE_NAME = "cache/save.tmp";
 class WebHookServer {
   private jobs: Job[] = [];
   private subgraph: Subgraph;
+  private lastSentError = 0;
   constructor() {
     this.subgraph = new Subgraph(process.env.GRAPH_NODE);
     this.start();
@@ -69,7 +70,15 @@ class WebHookServer {
       try {
         await this.jobs[id].run(lastCheckedBlock, currentSafeBlock);
       } catch (err) {
-        console.error(`Job id ${id} failed with error: ${err}`);
+        const message = `WebHook Server: Job id ${id} failed at block [${lastCheckedBlock}-${currentSafeBlock}] with error: ${err}`;
+        console.log(message);
+
+        // Send error the the slack channel up to once every 3h
+        const now = Date.now();
+        if (now - this.lastSentError > 180 * 60 * 100) {
+          await this.jobs[0].slackErrorNotification(message);
+          this.lastSentError = now;
+        }
       }
     }
 
