@@ -68,7 +68,7 @@ export class CeilingChecker extends Job {
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
     } else if (oldDebtAmt > lowThreshold && newDebtAmt < lowThreshold) {
-      const message = `RAI supply felt below ${
+      const message = `RAI supply fell below ${
         0.4 * 100
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
