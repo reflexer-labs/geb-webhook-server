@@ -56,7 +56,7 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
       const deltaCollateral = Number(change.deltaCollateral);
 
       // Skip if a dusty move
-      if (deltaDebt < 0.1 && deltaCollateral < 0.1) {
+      if (Math.abs(deltaDebt) < 0.1 && Math.abs(deltaCollateral) < 0.1) {
         continue;
       }
 
@@ -100,7 +100,7 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
         )} ETH 🤑`;
       }
       // Withdraw
-      else if (deltaDebt === 0 && deltaCollateral > 0) {
+      else if (deltaDebt === 0 && deltaCollateral < 0) {
         message = `Safe #${safeId} just withdrew ${deltaCollateral.toFixed(
           2
         )} ETH 🍃🍃`;
