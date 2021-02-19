@@ -79,9 +79,9 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
       }
       // Repay & Withdraw
       else if (deltaCollateral < 0 && deltaDebt < 0) {
-        message = `Safe #${safeId} repaid ${(-1 * deltaDebt).toFixed(
+        message = `Safe #${safeId} repaid ${Math.abs(deltaDebt).toFixed(
           2
-        )} of RAI debt of withdrew ${(-1 * deltaCollateral).toFixed(
+        )} of RAI debt and withdrew ${Math.abs(deltaCollateral).toFixed(
           2
         )} ETH of collateral 🍃🍃`;
       }
@@ -91,7 +91,9 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
       }
       // Repay
       else if (deltaCollateral === 0 && deltaDebt < 0) {
-        message = `Safe #${safeId} repaid ${deltaDebt.toFixed(2)} RAI 🍃🍃`;
+        message = `Safe #${safeId} repaid ${Math.abs(deltaDebt).toFixed(
+          2
+        )} RAI 🍃🍃`;
       }
       // Deposit
       else if (deltaDebt === 0 && deltaCollateral > 0) {
@@ -101,9 +103,9 @@ modifySAFECollateralizations(where: {createdAtBlock_gt: ${lastCheckedBlock}, cre
       }
       // Withdraw
       else if (deltaDebt === 0 && deltaCollateral < 0) {
-        message = `Safe #${safeId} just withdrew ${deltaCollateral.toFixed(
-          2
-        )} ETH 🍃🍃`;
+        message = `Safe #${safeId} just withdrew ${Math.abs(
+          deltaCollateral
+        ).toFixed(2)} ETH 🍃🍃`;
       }
 
       const isWhale = deltaDebt >= 200000; // 200k RAI
