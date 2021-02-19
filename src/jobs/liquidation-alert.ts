@@ -59,7 +59,7 @@ export class LiquidationAlertJob extends Job {
 
       let message = `Safe #${safeId} was just liquidated ☠ ${Number(
         liquidation.sellInitialAmount
-      ).toFixed(0)} ETH of collateral is for sale in auction #${
+      ).toFixed(2)} ETH of collateral is for sale in auction #${
         liquidation.auctionId
       } [[link](<${this.getEtherscanLink(liquidation.createdAtTransaction)}>)]`;
 
