@@ -63,7 +63,7 @@ export class LiquidationAlertJob extends Job {
         liquidation.auctionId
       } [[link](<${this.getEtherscanLink(liquidation.createdAtTransaction)}>)]`;
 
-      await this.discordGebActivityChannel(message);
+      await this.discordLiquidationChannel(message);
     }
 
     for (let liquidation of resp.fixedDiscountAuctionBatches) {
@@ -75,7 +75,7 @@ export class LiquidationAlertJob extends Job {
         liquidation.createdAtTransaction
       )}>)]`;
 
-      await this.discordGebActivityChannel(message);
+      await this.discordLiquidationChannel(message);
     }
   }
 }
