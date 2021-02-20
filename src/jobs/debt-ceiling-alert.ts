@@ -59,17 +59,21 @@ export class CeilingChecker extends Job {
     const newDebtAmt = Number(resp.new.debtAmount);
 
     const ceiling = Number(resp.new.debtCeiling);
-    const highThreshold = 0.9 * ceiling;
-    const lowThreshold = 0.4 * ceiling;
+
+    const percentHighThreshold = 0.9;
+    const percentLowThreshold = 0.4;
+
+    const highThreshold = percentHighThreshold * ceiling;
+    const lowThreshold = percentLowThreshold * ceiling;
 
     if (oldDebtAmt < highThreshold && newDebtAmt >= highThreshold) {
       const message = `RAI supply rose above ${
-        highThreshold * 100
+        percentHighThreshold * 100
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
     } else if (oldDebtAmt > lowThreshold && newDebtAmt < lowThreshold) {
       const message = `RAI supply fell below ${
-        lowThreshold * 100
+        percentLowThreshold * 100
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
     }
