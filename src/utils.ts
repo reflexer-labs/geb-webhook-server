@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Geb } from "geb.js";
-
+import Axios from "axios"
 export const getGeb = async () => {
   const rpc = process.env.RPC_URL;
 
@@ -18,3 +18,12 @@ export const arrayCompare = (a, b) =>
 export const sleep = async (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
+export const getEthPrice = async () => 
+  parseFloat(
+    (
+      await Axios.get(
+        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+      )
+    ).data.ethereum.usd
+  )

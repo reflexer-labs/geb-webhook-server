@@ -6,6 +6,7 @@ import { NewSafeJob } from "./jobs/new-safe";
 import { CeilingChecker } from "./jobs/debt-ceiling-alert";
 import { LiquidationAlertJob } from "./jobs/liquidation-alert";
 import { TraceMonitorJob } from "./jobs/trace-monitor";
+import { SwapJob } from "./jobs/swap-alert";
 
 // Load .env
 require("dotenv").config();
@@ -32,6 +33,7 @@ class WebHookServer {
     this.jobs.push(new ModifySafeJob(this.subgraph));
     this.jobs.push(new LiquidationAlertJob(this.subgraph));
     this.jobs.push(new TraceMonitorJob(this.subgraph));
+    this.jobs.push(new SwapJob(this.subgraph));
   }
 
   private async poll() {
