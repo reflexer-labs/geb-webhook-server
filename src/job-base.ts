@@ -70,6 +70,8 @@ export abstract class Job {
       content: message,
     };
 
+    await sleep(1000);
+
     console.log(message);
     await Axios.post(hookUrl, content);
   }
