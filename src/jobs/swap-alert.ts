@@ -59,12 +59,12 @@ export class SwapJob extends Job {
     for (let buy of buys) {
       const ETHamount = Number(buy.amount1In);
       const RAIamount = Number(buy.amount0Out);
-      const message = `Someone just bought ${RAIamount.toFixed(
-        0
-      )} RAI for ${ETHamount.toFixed(1)} ETH on Uniswap. RAI is now at $${(
+      const message = `Someone just bought ${RAIamount.toFixed(0)} RAI at $${(
         (ETHamount / RAIamount) *
         ethPrice
-      ).toFixed(3)} 🦄💱🐳 [[link](<${this.getEtherscanLink(
+      ).toFixed(3)} for ${ETHamount.toFixed(
+        1
+      )} ETH on Uniswap 🦄💱🐳 [[link](<${this.getEtherscanLink(
         buy.createdAtTransaction
       )}>)]`;
 
@@ -74,12 +74,12 @@ export class SwapJob extends Job {
     for (let sell of sells) {
       const ETHamount = Number(sell.amount1Out);
       const RAIamount = Number(sell.amount0In);
-      const message = `Someone just sold ${RAIamount.toFixed(
-        0
-      )} RAI for ${ETHamount.toFixed(1)} ETH on Uniswap. RAI is now at $${(
+      const message = `Someone just sold ${RAIamount.toFixed(0)} RAI at $${(
         (ETHamount / RAIamount) *
         ethPrice
-      ).toFixed(3)} 🦄💱🐳 [[link](<${this.getEtherscanLink(
+      ).toFixed(3)} for ${ETHamount.toFixed(
+        1
+      )} ETH on Uniswap 🦄💱🐳 [[link](<${this.getEtherscanLink(
         sell.createdAtTransaction
       )}>)]`;
 
