@@ -216,17 +216,24 @@ export class TraceMonitorJob extends Job {
         );
 
         // Get the list of contract names involved in the transaction
-        const targets = watchlistTraces.reduce(
-          (targets, trace) =>
-            targets +
-            " " +
-            Object.keys(WATCHLIST).find(
-              (key) => WATCHLIST[key] === trace.action.to
-            ),
-          ""
-        );
+        let targets = watchlistTraces
+          .reduce(
+            (targets, trace) =>
+              targets +
+              " " +
+              Object.keys(WATCHLIST).find(
+                (key) => WATCHLIST[key] === trace.action.to
+              ),
+            ""
+          )
+          .split(" ");
+
+        targets = [...new Set(targets)];
+
         for (let hash of txHashes) {
-          const message = `Trace monitor notification: Unusual transaction targeting${targets} please inspect: https://etherscan.io/tx/${hash}`;
+          const message = `Trace monitor notification: Unusual transaction targeting${targets.join(
+            " "
+          )} please inspect: https://etherscan.io/tx/${hash}`;
           this.slackProtocolUpdate(message);
         }
       }
