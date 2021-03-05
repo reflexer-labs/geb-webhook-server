@@ -107,7 +107,11 @@ let WHITELIST =
 
   // Front-running bots doing liquidations
   ARB_1: "0x3a518964FF40Ee733d30749A213d2e5C9FFb2B8c",
-  ARB_2: "0x00000000e84F2bBdfB129ED6e495C7f879f3e634"
+  ARB_2: "0x00000000e84F2bBdfB129ED6e495C7f879f3e634",
+
+  // DefiSaver contracts
+  RAI_Saver_Taker: "0xf036548C1bc460f0eF642B73bbde8d2aF325aAa0",
+  RAISaverFlashLoan: "0xf91F8844258D3246bE5DAA201B52B51FC7fCCFD7"
 };
 
 type Trace = {
