@@ -1,7 +1,7 @@
 import { Job } from "../job-base";
 import { utils } from "geb.js";
 import { ethers, utils as EthersUtils } from "ethers";
-import { arrayCompare } from "../utils";
+import { arrayCompare, sleep } from "../utils";
 
 // Contracts that will need to be whitelisted whenever they are called by another contract
 let WATCHLIST =
@@ -156,9 +156,24 @@ export class TraceMonitorJob extends Job {
 
     // For each block since we last checked
     for (let i = lastCheckedBlock + 1; i <= currentSafeBlock; i++) {
-      let traces: Trace[] = await traceProvider.send("trace_block", [
-        ethers.BigNumber.from(i).toHexString(),
-      ]);
+      let traces: Trace[];
+
+      const fetchTraces = async (block: number) =>
+        traceProvider.send("trace_block", [
+          ethers.BigNumber.from(block).toHexString(),
+        ]);
+
+      try {
+        traces = await fetchTraces(i);
+      } catch (err) {
+        // Could not fetch the trace, wait 3 sec and retry
+        await sleep(3000);
+        try {
+          traces = await fetchTraces(i);
+        } catch (err) {
+          throw Error(`Could not fetch block traces: ${JSON.stringify(err)}`);
+        }
+      }
 
       // Keep only traces that targets the watchlist
       let watchlistTraces = traces.filter((t) =>
