@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { sleep } from "./utils";
 
 export class Subgraph {
   constructor(private url: string) {
@@ -36,15 +37,22 @@ export class Subgraph {
   }
 
   public async query(query: string): Promise<any> {
-    const prom = Axios.post(this.url, {
-      query,
-    });
+    const prom = (query: string, url: string) =>
+      Axios.post(this.url, {
+        query,
+      });
 
     let resp: any;
     try {
-      resp = await prom;
-    } catch (err) {
-      throw Error("Error with subgraph query: " + err);
+      resp = await prom(query, this.url);
+    } catch {
+      console.log("Subgraph query error, retry in 3sec...");
+      await sleep(3000);
+      try {
+        resp = await prom(query, this.url);
+      } catch (err) {
+        throw Error("Error with subgraph query: " + err);
+      }
     }
 
     if (!resp.data || !resp.data.data) {
