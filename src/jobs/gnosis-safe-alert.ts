@@ -33,7 +33,7 @@ export class GnosisSafeAlert extends Job {
 
     events.map((e) => {
       return this.slackMultisigNotification(
-        `New gnosis safe transaction success.
+        `Incoming transaction in the RAI manager Gnosis Safe.
 Link: https://etherscan.io/tx/${e.transactionHash}`
       );
     });
@@ -63,7 +63,7 @@ Link: https://etherscan.io/tx/${e.transactionHash}`
     events.map((e) => {
       const args = e.args as ethers.utils.Result;
       return this.slackMultisigNotification(
-        `New pending proposal scheduled in ds-pause. 
+        `:warning: New pending proposal scheduled in ds-pause :warning: *REVIEW* :arrow_down: 
 Link: https://etherscan.io/tx/${e.transactionHash}`
       );
     });
@@ -79,7 +79,7 @@ Link: https://etherscan.io/tx/${e.transactionHash}`
     events.map((e) => {
       const args = e.args as ethers.utils.Result;
       return this.slackMultisigNotification(
-        `Proposal executed in ds-pause. 
+        `✨ Proposal executed in ds-pause ✨ 
 Link: https://etherscan.io/tx/${e.transactionHash}`
       );
     });
