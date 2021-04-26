@@ -40,7 +40,19 @@ export const getContractEvents = async (
   const contract = new ethers.Contract(address, [abi], getProvider());
   const filterName = abi.split(" ")[1].split("(")[0];
   const filter = contract.filters[filterName]();
-  let events = await contract.queryFilter(filter, fromBlock, toBlock);
+
+  let events: ethers.Event[];
+  try {
+    events = await contract.queryFilter(filter, fromBlock, toBlock);
+  } catch (err) {
+    console.log(`RPC get logs error, retry in 2sec...`);
+    await sleep(2000);
+    try {
+      events = await contract.queryFilter(filter, fromBlock, toBlock);
+    } catch (err) {
+      throw Error("Error with RPC getLogs: " + err);
+    }
+  }
 
   return events;
 };
