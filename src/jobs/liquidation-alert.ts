@@ -8,13 +8,13 @@ export class LiquidationAlertJob extends Job {
     currentSafeBlock: number
   ): Promise<void> {
     const query = `{
-        fixedDiscountAuctions(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
+        discountAuctions(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
           safeHandler
           sellInitialAmount
           auctionId
           createdAtTransaction
         }
-        fixedDiscountAuctionBatches(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
+        discountAuctionBatches(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
           createdAtBlock
           sellAmount
           auction {
@@ -27,13 +27,13 @@ export class LiquidationAlertJob extends Job {
 }`;
 
     type AuctionData = {
-      fixedDiscountAuctions: {
+      discountAuctions: {
         safeHandler: string;
         auctionId: string;
         sellInitialAmount: string;
         createdAtTransaction: string;
       }[];
-      fixedDiscountAuctionBatches: {
+      discountAuctionBatches: {
         createdAtBlock: string;
         sellAmount: string;
         buyAmount: string;
@@ -46,7 +46,7 @@ export class LiquidationAlertJob extends Job {
     };
 
     const resp: AuctionData = await this.subgraph.query(query);
-    for (let liquidation of resp.fixedDiscountAuctions) {
+    for (let liquidation of resp.discountAuctions) {
       // Get the safe id
       const query = `{safes(where: {safeHandler: "${liquidation.safeHandler}"}){safeId}}`;
       const safeDetail = await this.subgraph.query(query);
@@ -66,7 +66,7 @@ export class LiquidationAlertJob extends Job {
       await this.discordLiquidationChannel(message);
     }
 
-    for (let liquidation of resp.fixedDiscountAuctionBatches) {
+    for (let liquidation of resp.discountAuctionBatches) {
       let message = `Someone just bid ${Number(liquidation.buyAmount).toFixed(
         2
       )} RAI for ${Number(liquidation.sellAmount).toFixed(2)} ETH in auction #${
