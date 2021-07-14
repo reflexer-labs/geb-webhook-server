@@ -179,21 +179,27 @@ export class TraceMonitorJob extends Job {
       let traces: Trace[];
 
       const fetchTraces = async (block: number) =>
-        traceProvider.send("trace_block", [
-          ethers.BigNumber.from(block).toHexString(),
-        ]);
+        traceProvider.send("trace_block", [ethers.BigNumber.from(block).toHexString()]);
 
-      try {
-        traces = await fetchTraces(i);
-      } catch (err) {
-        // Could not fetch the trace, wait 3 sec and retry
-        await sleep(3000);
+      const maxAttempts = 15;
+      for (let j = 0; j < maxAttempts; j++) {
         try {
           traces = await fetchTraces(i);
         } catch (err) {
-          throw Error(`Could not fetch block traces: ${JSON.stringify(err)}`);
+          // Could not fetch the trace, wait 3 sec and retry
+          console.log(err)
+          console.log(`Could not fetch block traces attempt ${j}`);
+          await sleep(3000);
         }
-      }
+
+        if (traces) {
+          break;
+        }
+
+        if (j === maxAttempts - 1) {
+          throw Error("Could not fetch block traces");
+        }
+      } 
 
       // Keep only traces that targets the watchlist
       let watchlistTraces = traces.filter((t) =>
