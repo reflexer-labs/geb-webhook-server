@@ -177,6 +177,7 @@ export class TraceMonitorJob extends Job {
     // For each block since we last checked
     for (let i = lastCheckedBlock + 1; i <= currentSafeBlock; i++) {
       let traces: Trace[];
+      let err: any
 
       const fetchTraces = async (block: number) =>
         traceProvider.send("trace_block", [ethers.BigNumber.from(block).toHexString()]);
@@ -185,9 +186,9 @@ export class TraceMonitorJob extends Job {
       for (let j = 0; j < maxAttempts; j++) {
         try {
           traces = await fetchTraces(i);
-        } catch (err) {
+        } catch (error) {
           // Could not fetch the trace, wait 3 sec and retry
-          console.log(err)
+          err = error
           console.log(`Could not fetch block traces attempt ${j}`);
           await sleep(3000);
         }
@@ -197,6 +198,7 @@ export class TraceMonitorJob extends Job {
         }
 
         if (j === maxAttempts - 1) {
+          console.log(err)
           throw Error("Could not fetch block traces");
         }
       } 
