@@ -67,12 +67,12 @@ export class CeilingChecker extends Job {
     const lowThreshold = percentLowThreshold * ceiling;
 
     if (oldDebtAmt < highThreshold && newDebtAmt >= highThreshold) {
-      const message = `@here RAI supply rose above ${
+      const message = `<!here> RAI supply rose above ${
         percentHighThreshold * 100
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
     } else if (oldDebtAmt > lowThreshold && newDebtAmt < lowThreshold) {
-      const message = `@here RAI supply fell below ${
+      const message = `<!here> RAI supply fell below ${
         percentLowThreshold * 100
       }% of debt ceiling capacity`;
       this.slackProtocolUpdate(message);
@@ -94,7 +94,7 @@ export class CeilingChecker extends Job {
       oldRaiSupply > oldDebtAmt * supplyThreshold &&
       newRaiSupply < newDebtAmt * supplyThreshold
     ) {
-      const message = `@here Supply in RAI/ETH Uniswap V2 pool felt below ${
+      const message = `<!here> Supply in RAI/ETH Uniswap V2 pool felt below ${
         supplyThreshold * 100
       }% of RAI supply`;
 
