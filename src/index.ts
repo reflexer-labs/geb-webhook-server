@@ -72,6 +72,11 @@ class WebHookServer {
       return;
     }
 
+    if (lastCheckedBlock >= currentSafeBlock) {
+      // No new block to check
+      return;
+    }
+
     for (let id in this.jobs) {
       try {
         await this.jobs[id].run(lastCheckedBlock, currentSafeBlock);
