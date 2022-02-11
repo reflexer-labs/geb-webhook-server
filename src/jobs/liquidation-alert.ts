@@ -1,12 +1,13 @@
 import { Job } from "../job-base";
 import { utils } from "geb.js";
 import { utils as EthersUtils } from "ethers";
+import { getContractEvents } from "../utils";
+
+const LIQUIDATION_ENGINE = "0x27Efc6FFE79692E0521E7e27657cF228240A06c2";
 
 export class LiquidationAlertJob extends Job {
-  public async run(
-    lastCheckedBlock: number,
-    currentSafeBlock: number
-  ): Promise<void> {
+  public async run(lastCheckedBlock: number, currentSafeBlock: number): Promise<void> {
+    // Fetch liquidation from the subgraph
     const query = `{
         discountAuctions(where: {createdAtBlock_gt: ${lastCheckedBlock}, createdAtBlock_lte: ${currentSafeBlock}}) {
           safeHandler
@@ -45,10 +46,8 @@ export class LiquidationAlertJob extends Job {
       }[];
     };
 
-    const resp: AuctionData = await this.subgraph.query(query);
-    for (let liquidation of resp.discountAuctions) {
-      // Get the safe id
-      const query = `{safes(where: {safeHandler: "${liquidation.safeHandler}"}){safeId}}`;
+    const getSafeIdFromHandler = async (handler: string) => {
+      const query = `{safes(where: {safeHandler: "${handler}"}){safeId}}`;
       const safeDetail = await this.subgraph.query(query);
       let safeId: string;
       if (!safeDetail.safes.length || !safeDetail.safes[0].safeId) {
@@ -57,24 +56,48 @@ export class LiquidationAlertJob extends Job {
         safeId = safeDetail.safes[0].safeId;
       }
 
-      let message = `Safe #${safeId} was just liquidated ☠ ${Number(
-        liquidation.sellInitialAmount
-      ).toFixed(2)} ETH of collateral is for sale in auction #${
-        liquidation.auctionId
-      } [[link](<${this.getEtherscanLink(liquidation.createdAtTransaction)}>)]`;
+      return safeId;
+    };
+
+    const resp: AuctionData = await this.subgraph.query(query);
+    for (let liquidation of resp.discountAuctions) {
+      let message = `Safe #${await getSafeIdFromHandler(
+        liquidation.safeHandler
+      )} was just liquidated ☠ ${Number(liquidation.sellInitialAmount).toFixed(
+        2
+      )} ETH of collateral is for sale in auction #${liquidation.auctionId} [[link](<${this.getEtherscanLink(
+        liquidation.createdAtTransaction
+      )}>)]`;
 
       await this.discordLiquidationChannel(message);
     }
 
     for (let liquidation of resp.discountAuctionBatches) {
-      let message = `Someone just bid ${Number(liquidation.buyAmount).toFixed(
-        2
-      )} RAI for ${Number(liquidation.sellAmount).toFixed(2)} ETH in auction #${
-        liquidation.auction.auctionId
-      } 🤝 [[link](<${this.getEtherscanLink(
+      let message = `Someone just bid ${Number(liquidation.buyAmount).toFixed(2)} RAI for ${Number(
+        liquidation.sellAmount
+      ).toFixed(2)} ETH in auction #${liquidation.auction.auctionId} 🤝 [[link](<${this.getEtherscanLink(
         liquidation.createdAtTransaction
       )}>)]`;
 
+      await this.discordLiquidationChannel(message);
+    }
+
+    // Fetch saved safe from events
+    const liquidationEngineAbi = [
+      "event SaveSAFE(bytes32 indexed collateralType, address indexed safe, uint256 collateralAddedOrDebtRepaid)",
+    ];
+
+    const events = await getContractEvents(
+      liquidationEngineAbi[0],
+      LIQUIDATION_ENGINE,
+      lastCheckedBlock,
+      currentSafeBlock
+    );
+
+    for (let event of events) {
+      const message = `Safe id #${await getSafeIdFromHandler(
+        event.args.safe
+      )} was just saved from liqudiation 🥰 [[link](<${this.getEtherscanLink(event.transactionHash)}>)]`;
       await this.discordLiquidationChannel(message);
     }
   }
