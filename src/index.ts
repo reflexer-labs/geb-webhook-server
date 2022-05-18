@@ -8,6 +8,7 @@ import { LiquidationAlertJob } from "./jobs/liquidation-alert";
 import { TraceMonitorJob } from "./jobs/trace-monitor";
 import { SwapJob } from "./jobs/swap-alert";
 import { GnosisSafeAlert } from "./jobs/gnosis-safe-alert";
+import { SurplusAuctionJob } from "./jobs/surplus-auction";
 
 // Load .env
 require("dotenv").config();
