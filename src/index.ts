@@ -37,6 +37,7 @@ class WebHookServer {
     this.jobs.push(new SwapJob(this.subgraph));
     this.jobs.push(new GnosisSafeAlert(this.subgraph));
     this.jobs.push(new SurplusAuctionJob(this.subgraph));
+    this.jobs.push(new GovProposals(this.subgraph));
 
     // Turned since Alchemy is dropping support for parity trace
     // this.jobs.push(new TraceMonitorJob(this.subgraph));
