@@ -16,7 +16,7 @@ export class GovProposals extends Job {
     ];
 
     for (let evt of governorAbi) {
-      const events = await getContractEvents(evt, RAI_GOVERNOR, lastCheckedBlock, currentSafeBlock);
+      const events = await getContractEvents(evt, RAI_GOVERNOR, lastCheckedBlock + 1, currentSafeBlock);
 
       for (let event of events) {
         await this.slackMultisigNotification(
