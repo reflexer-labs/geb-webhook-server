@@ -3,7 +3,7 @@ import { utils } from "geb.js";
 import { utils as EthersUtils } from "ethers";
 import { getContractEvents } from "../utils";
 
-const LIQUIDATION_ENGINE = "0x27Efc6FFE79692E0521E7e27657cF228240A06c2";
+const LIQUIDATION_ENGINE = "0x4fFbAA89d648079Faafc7852dE49EA1dc92f9976";
 
 export class LiquidationAlertJob extends Job {
   public async run(lastCheckedBlock: number, currentSafeBlock: number): Promise<void> {
